@@ -1,80 +1,87 @@
 #include "shell.h"
 
 /**
- **_memset - fills memory with a constant byte
- *@s: the pointer to the memory area
- *@b: the byte to fill *s with
- *@n: the amount of bytes to be filled
- *Return: (s) a pointer to the memory area s
- */
-char *_memset(char *s, char b, unsigned int n)
-{
-unsigned int i;
-
-for (i = 0; i < n; i++)
-s[i] = b;
-return (s);
-}
-
-/**
- * ffree - frees a string of strings
- * @pp: string of strings
- */
-void ffree(char **pp)
-{
-char **a = pp;
-
-if (!pp)
-return;
-while (*pp)
-free(*pp++);
-free(a);
-}
-
-/**
- * _realloc - reallocates a block of memory
- * @ptr: pointer to previous malloc'ated block
- * @old_size: byte size of previous block
- * @new_size: byte size of new block
+ * _strcpy - copies a string
+ * @dest: the destination
+ * @src: the source
  *
- * Return: pointer to da ol'block nameen.
+ * Return: pointer to destination
  */
-void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
+char *_strcpy(char *dest, char *src)
 {
-char *p;
+	int i = 0;
 
-if (!ptr)
-return (malloc(new_size));
-if (!new_size)
-{
-free(ptr);
-return (NULL);
-}
-if (new_size == old_size)
-return (ptr);
-
-p = malloc(new_size);
-if (!p)
-return (NULL);
-
-_memcpy(p, ptr, (old_size < new_size) ? old_size : new_size);
-free(ptr);
-return (p);
+	if (dest == src || src == 0)
+		return (dest);
+	while (src[i])
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = 0;
+	return (dest);
 }
 
 /**
- * _memcpy - copies memory area
- * @dest: pointer to the destination memory area
- * @src: pointer to the source memory area
- * @n: number of bytes to copy
- * Return: pointer to destination memory area
+ * _strdup - duplicates a string
+ * @str: the string to duplicate
+ *
+ * Return: pointer to the duplicated string
  */
-void *_memcpy(void *dest, const void *src, unsigned int n)
+char *_strdup(const char *str)
 {
-char *d = dest;
-const char *s = src;
+	int length = 0;
+	char *ret;
 
-while (n--)
-*d++ = *s++;
-return (dest);
+	if (str == NULL)
+		return (NULL);
+	while (*str++)
+		length++;
+	ret = malloc(sizeof(char) * (length + 1));
+	if (!ret)
+		return (NULL);
+	for (length++; length--;)
+		ret[length] = *--str;
+	return (ret);
+}
+
+/**
+ *_puts - prints an input string
+ *@str: the string to be printed
+ *
+ * Return: Nothing
+ */
+void _puts(char *str)
+{
+	int i = 0;
+
+	if (!str)
+		return;
+	while (str[i] != '\0')
+	{
+		_putchar(str[i]);
+		i++;
+	}
+}
+
+/**
+ * _putchar - writes the character c to stdout
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set appropriately.
+ */
+int _putchar(char c)
+{
+	static int i;
+	static char buf[WRITE_BUF_SIZE];
+
+	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	{
+		write(1, buf, i);
+		i = 0;
+	}
+	if (c != BUF_FLUSH)
+		buf[i++] = c;
+	return (1);
 }
